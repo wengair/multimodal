@@ -15,12 +15,21 @@ function DataContext({children}) {
       .catch(e => console.log(e))
   }
 
+  const findPredictionByClip = (clip) => {
+    console.log('clip', clip)
+    for(const prediction of predictions){
+      const predictionClip = prediction.img_fn.split('/')[1].split('@')[0]
+      if(predictionClip === clip) return prediction
+    }
+  }
+  
+
   useEffect(() => {
     readDataJson()
   }, [])
 
   return (
-    <Data.Provider value={{predictions}}>
+    <Data.Provider value={{predictions, findPredictionByClip}}>
       {children}
     </Data.Provider>
   )
