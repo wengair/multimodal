@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Filter from './Filter'
 import InstanceCard from './InstanceCard'
 import {Link} from 'react-router-dom'
@@ -9,11 +9,18 @@ function InstanceList({mode}) {
   // const requireImages = require.context('../data/image_val_100/', true, /\.jpg$/)
   // const allImgpaths = requireImages.keys().map(path => ({path, file: requireImages(path)}))
   const data = useContext(Data)
+  const [filteredData, setFilteredData] = useState()
+
+  useEffect(() => {
+    console.log(data)
+    if(data.predictions) setFilteredData(data.predictions)
+  },[data])
+  console.log(filteredData)
   return (
     <div className='instance-list-container'>
-      <Filter />
+      <Filter data={data} setFilteredData={setFilteredData} />
       <div className='cards-container'>
-        {data.predictions && data.predictions.map((instance, idx) => <Link to={`/${mode}/instances/${idx}`} key={idx}><InstanceCard instance={instance} /></Link>)}
+        {filteredData && filteredData.map((instance, idx) => <Link to={`/${mode}/instances/${idx}`} key={idx}><InstanceCard instance={instance} /></Link>)}
       </div>
       <style jsx='true'>
         {`

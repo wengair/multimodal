@@ -20,7 +20,7 @@ function DataContext({children}) {
   }, [])
 
   return (
-    <Data.Provider value={{instances}}>
+    <Data.Provider value={{predictions}}>
       {children}
     </Data.Provider>
   )
