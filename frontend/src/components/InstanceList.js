@@ -1,5 +1,6 @@
 import React, {useContext} from 'react'
 import Filter from './Filter'
+import ScatterPlot from './ScatterPlot'
 import InstanceCard from './InstanceCard'
 import {Link} from 'react-router-dom'
 // import data from '../data/200_sample_val_conv.json'
@@ -12,6 +13,7 @@ function InstanceList({mode}) {
   return (
     <div className='instance-list-container'>
       <Filter />
+      <ScatterPlot />
       <div className='cards-container'>
         {data.predictions && data.predictions.map((instance, idx) => <Link to={`/${mode}/instances/${idx}`} key={idx}><InstanceCard instance={instance} /></Link>)}
       </div>
@@ -23,12 +25,14 @@ function InstanceList({mode}) {
 
         .cards-container {
           display: flex;
-          width: 80vw;
+          width: 50%;
           flex-wrap: wrap;
         }
         `}
       </style>
+      
     </div>
+    
   )
 }
 
