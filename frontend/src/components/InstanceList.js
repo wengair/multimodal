@@ -13,7 +13,7 @@ function InstanceList({mode}) {
     <div className='instance-list-container'>
       <Filter />
       <div className='cards-container'>
-        {data.instances && data.instances.map((instance, idx) => <Link to={`/${mode}/instances/${idx}`} key={idx}><InstanceCard instance={instance} /></Link>)}
+        {data.predictions && data.predictions.map((instance, idx) => <Link to={`/${mode}/instances/${idx}`} key={idx}><InstanceCard instance={instance} /></Link>)}
       </div>
       <style jsx='true'>
         {`
