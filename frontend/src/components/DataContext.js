@@ -4,8 +4,9 @@ export const Data = createContext(null)
 
 function DataContext({children}) {
   const [predictions, setPredictions] = useState()
+  const [groundTruths, setGroundTruths] = useState()
 
-  const readDataJson = () => {
+  const readPredictionJson = () => {
     fetch('/data/200_sample_val_conv.json')
       .then(res => res.json())
       .then(result => {
@@ -23,13 +24,30 @@ function DataContext({children}) {
     }
   }
   
+  const readGroundTruthJson = () => {
+    fetch('/data/200_ground_val.json')
+      .then(res => res.json())
+      .then(result => {
+        setGroundTruths(result)
+      })
+      .catch(e => console.log(e))
+  }
+
+  const findGroundTruthByClip = (clip) => {
+    console.log('clip', clip)
+    for(const groundTruth of groundTruths){
+      const groundTruthClip = groundTruth.img_fn.split('/')[1].split('@')[0]
+      if(groundTruthClip === clip) return groundTruth
+    }
+  }
 
   useEffect(() => {
-    readDataJson()
+    readPredictionJson()
+    readGroundTruthJson()
   }, [])
 
   return (
-    <Data.Provider value={{predictions, findPredictionByClip}}>
+    <Data.Provider value={{predictions, findPredictionByClip, groundTruths, findGroundTruthByClip}}>
       {children}
     </Data.Provider>
   )

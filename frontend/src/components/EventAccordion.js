@@ -7,7 +7,7 @@ import {
 } from "@reach/accordion";
 import "@reach/accordion/styles.css"
 
-function EventAccordion({instance}) {
+function EventAccordion({instance, groundTruth}) {
 
   return (
     <Accordion>
@@ -28,8 +28,11 @@ function EventAccordion({instance}) {
                     <p>Ground Truth</p> 
                     {/* Training data */}
                     <p>Intent:</p>
+                    {groundTruth.events[idx].intent}
                     <p>Before:</p>
+                    {groundTruth.events[idx].before}
                     <p>After:</p>
+                    {groundTruth.events[idx].after}
                   </div>
                   <div className='result-container'>
                     <p>Predicted</p>
