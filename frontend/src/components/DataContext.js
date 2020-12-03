@@ -1,54 +1,28 @@
 import React, {createContext, useState, useEffect} from 'react'
 
-export const AnnotatedData = createContext(null)
+export const Data = createContext(null)
 
 function DataContext({children}) {
-  const [annotatedData, setAnnotatedData] = useState()
+  const [predictions, setPredictions] = useState()
 
   const readDataJson = () => {
-    fetch('/data/val_annots.json')
+    fetch('/data/200_sample_val_conv.json')
       .then(res => res.json())
       .then(result => {
         console.log(result)
-        setAnnotatedData(result)
+        setPredictions(result)
       })
       .catch(e => console.log(e))
   }
 
-  const testPython = () => {
-    fetch('/data/test.py', {
-      method: 'POST',
-      mode: 'cors',
-      body: {
-        "--refs_file": 'test',
-        "--gens_file": 'ttest',
-      },
-    })
-      // .then(res => res.json())
-      .then(result => {
-        console.log(result)
-      })
-      .catch(e => console.log(e))
-    // $.ajax({
-    //   type: "POST",
-    //   url: "~/data/test.py",
-    //   data: { param: text}
-    //   }).done(function(o) {
-    //       console.log(data);
-    //       console.log(text);
-    //   });
-  }
-  
-  
   useEffect(() => {
-    // readDataJson()
-    testPython()
+    readDataJson()
   }, [])
 
   return (
-    <AnnotatedData.Provider value={{annotatedData}}>
+    <Data.Provider value={{instances}}>
       {children}
-    </AnnotatedData.Provider>
+    </Data.Provider>
   )
 }
 

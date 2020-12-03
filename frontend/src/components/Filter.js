@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import SingleListBox from './SingleListBox'
-import data from '../data/200_sample_val_conv.json'
+import {Data} from './DataContext'
 
 function Filter() {
+  const data = useContext(Data)
+  const [objectNameOptions, setObjectNameOptions] = useState([])
   // option format: [value for logic, string to display]
 
   const xAxisOptions = [
@@ -15,11 +17,11 @@ function Filter() {
     ['bleu', 'Bleu Score'],
   ]
 
-  /*const sceneOptions = [
-    ['indoor', 'Indoor'],
-    ['outdoor', 'Outdoor'],
-    ['kitchen', 'Kitchen'],
-  ]*/
+  // /*const sceneOptions = [
+  //   ['indoor', 'Indoor'],
+  //   ['outdoor', 'Outdoor'],
+  //   ['kitchen', 'Kitchen'],
+  // ]*/
 
   // const objectNameOptions = [
   //   ['human', 'Human'],
@@ -41,18 +43,22 @@ function Filter() {
   //var allObj=[];
   //const objtest = [data.map(event=>allObj.push(event.object_categories))]
   const objectSet = new Set()
-  // console.log({data})
-  data.map(item => {
-    item.object_categories.map(objectName => {
-      objectSet.add(objectName.toLowerCase())
-    })
-  })
-  console.log({objectSet})
-  const objectNameOptions = []
-  objectSet.forEach(objectName => {
-    objectNameOptions.push([objectName, objectName])
-  })
-  console.log('objectNameOptions',objectNameOptions)
+  
+  useEffect(() => {
+    if(data.predictions) {
+      const tempObjectNameOptions = []
+      data.predictions.forEach(item => {
+        item.object_categories.forEach(objectName => {
+          objectSet.add(objectName.toLowerCase())
+        })
+      })
+      objectSet.forEach(objectName => {
+        tempObjectNameOptions.push([objectName, objectName])
+      })
+      setObjectNameOptions(tempObjectNameOptions)
+    }
+  }, [data])
+
   return (
     <div>
       <div className='filter-container'>
