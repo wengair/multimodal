@@ -45,9 +45,9 @@ function Filter() {
   const objectSet = new Set()
   
   useEffect(() => {
-    if(data.instances) {
+    if(data.predictions) {
       const tempObjectNameOptions = []
-      data.instances.forEach(item => {
+      data.predictions.forEach(item => {
         item.object_categories.forEach(objectName => {
           objectSet.add(objectName.toLowerCase())
         })
