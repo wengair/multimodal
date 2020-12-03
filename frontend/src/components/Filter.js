@@ -87,17 +87,28 @@ function Filter({data, setFilteredData}) {
   useEffect(() => {
     if(data.predictions){
     console.log('options has changed, the new result = ', selectedObjName, selectedObjNumber)
-  // use data with filter function 
-    // const findMatchAction(verbs, instance){
-    // data.predictions.filter((instance) => {})
-    // }
+  
+    const findMatchAction = (verbs, instance) => {
+      if(!verbs) return true
+      let found = false
+      instance.events.forEach(event => {
+        event.verbs.forEach(verbName =>{
+         if(verbName.includes(verbs)) found = true
+        })
+      })
+      return found
+    }
     const filteredData = data.predictions.filter((instance) => {
-       return instance.object_categories.includes(selectedObjName) || instance.num_objects === selectedObjNumber 
-      //return instance.events.verbs.includes(selectedActionType)
+      console.log(findMatchAction(selectedActionType,instance))
+      console.log(selectedObjNumber)
+       return (selectedObjName ? instance.object_categories.includes(selectedObjName) : true) && 
+              (selectedObjNumber ? (instance.num_objects === selectedObjNumber) : true) && 
+              findMatchAction(selectedActionType,instance)
     })
    setFilteredData(filteredData) // pass filtered data in
     }
   },[selectedObjName, selectedObjNumber,selectedActionType])
+  console.log('objectNumberOptions',objectNumberOptions)
   return (
     <div>
       <div className='filter-container'>
