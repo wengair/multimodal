@@ -14,15 +14,15 @@ function InstanceList({mode}) {
   useEffect(() => {
     if(data.predictions) setFilteredData(data.predictions)
   },[data])
-
   return (
     <div className='instance-list-container'>
-      <Filter data={data} setFilteredData={setFilteredData} />
+    {console.log(filteredData)}
+      <Filter data={data} filteredData={filteredData} setFilteredData={setFilteredData} mode={mode} />
       <div className='cards-container'>
-        {filteredData && filteredData.map((instance, idx) => {
+        {/* {filteredData && filteredData.map((instance, idx) => {
           const path = instance.img_fn.split('/')[1].split('@')[0]
           return <Link to={`/${mode}/instances/${path}`} key={idx}><InstanceCard instance={instance} /></Link>
-        })}
+        })} */}
       </div>
       <style jsx='true'>
         {`

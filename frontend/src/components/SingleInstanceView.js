@@ -129,7 +129,7 @@ function SingleInstanceView({mode}) {
           <div>
             <p>Mode: {mode}</p>
             <div className='misc-container'>
-              <EventAccordion instance={instance} groundTruth={groundTruth} />
+              <EventAccordion instance={instance} groundTruth={groundTruth} mode={mode}/>
             </div>
           </div>
         </>}
