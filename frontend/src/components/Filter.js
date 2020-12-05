@@ -33,9 +33,10 @@ function Filter({data, filteredData, setFilteredData, mode}) {
     ['true', 'True'],
     ['false', 'False'],
   ]
-// Obj Name
   const objectSet = new Set()
-  
+  const objectNumSet = new Set()
+  const verbSet = new Set()
+// Obj Name first load
   useEffect(() => {
     if(data.predictions) {
       const tempObjectNameOptions = []
@@ -52,8 +53,7 @@ function Filter({data, filteredData, setFilteredData, mode}) {
   }, [data])
   objectNameOptions.sort();
 
-//Obj Number
-  const objectNumSet = new Set()
+// Obj Number first load
   useEffect(() => {
     if(data.predictions) {
       const tempObjectNumberOptions = []
@@ -69,8 +69,8 @@ function Filter({data, filteredData, setFilteredData, mode}) {
     }
   }, [data])
   objectNumberOptions.sort(function(a,b){return a[0] - b[0]});
-// Action Type
-  const verbSet = new Set()
+
+// Action type first load
   useEffect(() => {
     if(data.predictions) {
       const actionTypeOptions = []
@@ -89,20 +89,145 @@ function Filter({data, filteredData, setFilteredData, mode}) {
   }, [data])
   actionTypeOptions.sort();
 
+// Update ObjName based on the chosen ObjNum or ActionType
+useEffect(() => {
+  const tempObjectNameOptions = []
+  // Based on ObjNumber (DONE)
+  if(selectedObjNumber) {
+    if(filteredData) {
+      filteredData.forEach(instance => {
+        if(instance.num_objects === selectedObjNumber){
+          instance.object_categories.forEach(objectName => {
+            objectSet.add(objectName.toLowerCase())
+          })
+        }
+      })
+      objectSet.forEach(objectName => {
+        tempObjectNameOptions.push([objectName, objectName])
+      })
+      setObjectNameOptions(tempObjectNameOptions)
+    }
+  }
+  // Based on ActionType (DONE)
+  else if(filteredData) {
+    filteredData.forEach(instance => {
+      instance.events.forEach(event => {
+        event.verbs.forEach(verbName => {
+          if(findMatchAction(verbName, instance)){
+            instance.object_categories.forEach(objectName => {
+              objectSet.add(objectName.toLowerCase())
+            })
+          }
+        })
+      })
+    })
+    objectSet.forEach(objectName => {
+      tempObjectNameOptions.push([objectName, objectName])
+    })
+    setObjectNameOptions(tempObjectNameOptions)
+  }
+},[filteredData],[selectedObjNumber],[selectedActionType])
+objectNameOptions.sort()
+
+// Update ObjNumber based on the chosen ActionType or ObjName
+  useEffect(()=>{
+    const tempObjectNumberOptions = []
+
+    // Based on ActionType(DONE)
+    if(filteredData) {
+      filteredData.forEach(instance => {
+        instance.events.forEach(event => {
+          event.verbs.forEach(verbName => {
+            if(findMatchAction(verbName, instance)){
+              objectNumSet.add(instance.num_objects)
+            }
+          })
+        })
+      })
+      objectNumSet.forEach(objNumber => {
+        tempObjectNumberOptions.push([objNumber, objNumber])
+      })
+      setObjectNumberOptions(tempObjectNumberOptions)
+    }
+     // Based on ObjName (DONE)
+    else if(selectedObjName) {
+      if(filteredData) {
+        filteredData.forEach(instance => {
+          instance.object_categories.forEach(objectName => {
+            if(objectName.includes(selectedObjName)){
+              objectNumSet.add(instance.num_objects)
+            }
+          })
+        })
+        objectNumSet.forEach(objectNumber => {
+          tempObjectNumberOptions.push([objectNumber, objectNumber])
+        })
+        setObjectNumberOptions(tempObjectNumberOptions)
+      }
+    }
+  },[filteredData],[selectedObjName],[selectedActionType])
+  objectNumberOptions.sort(function(a,b){return a[0] - b[0]});
+
+// Update ActionType based on the chosen ObjNumber or ObjName
+  useEffect(() => {
+    const actionTypeOptions = []
+    // Based on ObjNumber (DONE)
+    if(selectedObjNumber) {
+      if(filteredData) {
+        filteredData.forEach(instance => {
+          if(instance.num_objects === selectedObjNumber){
+            instance.events.forEach(event => {
+              event.verbs.forEach(verbName => {
+                verbSet.add(verbName.toLowerCase())
+              })
+            })
+          }
+        })
+        verbSet.forEach(verbtName => {
+          actionTypeOptions.push([verbtName, verbtName])
+        })
+        setActionTypeOptions(actionTypeOptions)
+      }
+    }
+    // Based on ObjName (DONE)
+    else if(selectedObjName) {
+      if(filteredData) {
+        filteredData.forEach(instance => {
+          instance.object_categories.forEach(objectName => {
+            if(objectName.includes(selectedObjName)){
+              instance.events.forEach(event => {
+                event.verbs.forEach(verbName => {
+                  verbSet.add(verbName.toLowerCase())
+                })
+              })
+            }
+          })
+        })
+        verbSet.forEach(verbtName => {
+          actionTypeOptions.push([verbtName, verbtName])
+        })
+        setActionTypeOptions(actionTypeOptions)
+      }
+    }
+  },[filteredData],[selectedObjNumber],[selectedObjName])
+  actionTypeOptions.sort();
+
+  //Compare ActionType
+  const findMatchAction = (verbs, instance) => {
+    if(!verbs) return true
+    let found = false
+    instance.events.forEach(event => {
+      event.verbs.forEach(verbName =>{
+       if(verbName.includes(verbs)) found = true
+      })
+    })
+    return found
+  }
+
   useEffect(() => {
     if(data.predictions){
     //console.log('options has changed, the new result = ', selectedObjName, selectedObjNumber)
   
-    const findMatchAction = (verbs, instance) => {
-      if(!verbs) return true
-      let found = false
-      instance.events.forEach(event => {
-        event.verbs.forEach(verbName =>{
-         if(verbName.includes(verbs)) found = true
-        })
-      })
-      return found
-    }
     const filteredData = data.predictions.filter((instance) => {
       //console.log(findMatchAction(selectedActionType,instance))
       //console.log(selectedObjNumber)
@@ -113,7 +238,6 @@ function Filter({data, filteredData, setFilteredData, mode}) {
    setFilteredData(filteredData) // pass filtered data in
     }
   },[selectedObjName, selectedObjNumber,selectedActionType])
-  //console.log('objectNumberOptions',objectNumberOptions)
   return (
     <div>
       <div className='filter-container'>

@@ -9,7 +9,7 @@ function SingleListBox({label, options, setOption}) {
     if(options[0]) setValue(options[0][0])
   },[options])
 
-  console.log({options})
+  //console.log({options})
 
   const onOptionChange = (value) => {
     setValue(value)

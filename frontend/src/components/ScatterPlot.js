@@ -16,7 +16,7 @@ function ScatterPlot({data, selectedObjName, selectedYasix}) {
                 }
                 return initArray
             },[])
-            console.log(result) // the result is a dataset contains several arrays, each arrray contain samples with same objnumber.
+           // console.log(result) // the result is a dataset contains several arrays, each arrray contain samples with same objnumber.
             d3.selectAll("svg > *").remove();    
             const svg = d3.select("#plot");
             const plot_svg_width = 600;
