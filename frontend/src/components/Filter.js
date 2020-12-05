@@ -1,54 +1,42 @@
 import React, {useState, useEffect, useContext} from 'react'
+import ScatterPlot from './ScatterPlot'
 import SingleListBox from './SingleListBox'
-import {Data} from './DataContext'
+// import {Data} from './DataContext'
 
-function Filter() {
-  const data = useContext(Data)
+function Filter({data, setFilteredData}) {
+  // const data = useContext(Data)
   const [objectNameOptions, setObjectNameOptions] = useState([])
+  const [objectNumberOptions, setObjectNumberOptions] = useState([])
+  const [actionTypeOptions, setActionTypeOptions] = useState([])
+  const [selectedObjName, setSelectedObjName] = useState()
+  const [selectedObjNumber, setSelectedObjNumber] = useState()
+  const [selectedActionType, setSelectedActionType] = useState()
+  const [selectedXaxis, setSelectedXaxis] = useState()
+  const [selectedYaxis, setSelectedYaxis] = useState()
   // option format: [value for logic, string to display]
 
-  const xAxisOptions = [
-    ['bleu', 'Bleu Score'],
-    ['cider', 'CIDEr Score'],
-  ]
-
   const yAxisOptions = [
-    ['cider', 'CIDEr Score'],
-    ['bleu', 'Bleu Score'],
+    ['Bleu_1', 'Bleu Score'],
+    ['Cider', 'CIDEr Score'],
   ]
 
-  // /*const sceneOptions = [
-  //   ['indoor', 'Indoor'],
-  //   ['outdoor', 'Outdoor'],
-  //   ['kitchen', 'Kitchen'],
-  // ]*/
-
-  // const objectNameOptions = [
-  //   ['human', 'Human'],
-  //   ['cat', 'Cat'],
-  //   ['dog', 'Dog'],
-  // ]
-
-  const ActionTypeOptions = [
-    ['verb1', 'Verb1'],
-    ['verb2', 'Verb2'],
-    ['verb3', 'Verb3'],
+  const xAxisOptions = [
+    ['num of objects', 'Num of Objects'],
+    ['name of object', 'Name of Objects'],
   ]
   
   const markOptions = [
     ['true', 'True'],
     ['false', 'False'],
   ]
-
-  //var allObj=[];
-  //const objtest = [data.map(event=>allObj.push(event.object_categories))]
+// Obj Name
   const objectSet = new Set()
   
   useEffect(() => {
     if(data.predictions) {
       const tempObjectNameOptions = []
-      data.predictions.forEach(item => {
-        item.object_categories.forEach(objectName => {
+      data.predictions.forEach(instance => {
+        instance.object_categories.forEach(objectName => {
           objectSet.add(objectName.toLowerCase())
         })
       })
@@ -58,16 +46,70 @@ function Filter() {
       setObjectNameOptions(tempObjectNameOptions)
     }
   }, [data])
+  objectNameOptions.sort();
 
+//Obj Number
+  const objectNumSet = new Set()
+  useEffect(() => {
+    if(data.predictions) {
+      const tempObjectNumberOptions = []
+      data.predictions.forEach(instance => {
+
+          objectNumSet.add(instance.num_objects)
+        
+      })
+      objectNumSet.forEach(objectNumber => {
+        tempObjectNumberOptions.push([objectNumber, objectNumber])
+      })
+      setObjectNumberOptions(tempObjectNumberOptions)
+    }
+  }, [data])
+  objectNumberOptions.sort(function(a,b){return a[0] - b[0]});
+// Action Type
+  const verbSet = new Set()
+  useEffect(() => {
+    if(data.predictions) {
+      const actionTypeOptions = []
+      data.predictions.forEach(instance => {
+        instance.events.forEach(event => {
+          event.verbs.forEach(verbName =>{
+            verbSet.add(verbName.toLowerCase())
+          })
+        })
+      })
+      verbSet.forEach(verbtName => {
+        actionTypeOptions.push([verbtName, verbtName])
+      })
+      setActionTypeOptions(actionTypeOptions)
+    }
+  }, [data])
+  actionTypeOptions.sort();
+
+  useEffect(() => {
+    if(data.predictions){
+    console.log('options has changed, the new result = ', selectedObjName, selectedObjNumber)
+    // use data with filter function 
+    // const findMatchAction(verbs, instance){
+    // data.predictions.filter((instance) => {})
+    // }
+    const filteredData = data.predictions.filter((instance) => {
+       return instance.object_categories.includes(selectedObjName) && instance.num_objects === selectedObjNumber 
+      //return instance.events.verbs.includes(selectedActionType)
+    })
+    setFilteredData(filteredData) // pass filtered data in
+    }
+  },[selectedObjName, selectedObjNumber,selectedActionType])
   return (
     <div>
       <div className='filter-container'>
-        <SingleListBox label='Object Name' options= {objectNameOptions}/>
-        <SingleListBox label='Action Type' options={ActionTypeOptions} />
+        <SingleListBox label='X Axis' options={xAxisOptions} setOption={setSelectedXaxis}/>
+        <SingleListBox label='Y Axis' options={yAxisOptions} setOption={setSelectedYaxis}/>
+        <SingleListBox label='Object Name' options= {objectNameOptions} setOption={setSelectedObjName} />
+        <SingleListBox label='Object Number' options= {objectNumberOptions} setOption={setSelectedObjNumber} />
+        <SingleListBox label='Action Type' options={actionTypeOptions} setOption={setSelectedActionType} />
         <SingleListBox label='Mark' options={markOptions} />
-        <SingleListBox label='X Axis' options={xAxisOptions} />
-        <SingleListBox label='Y Axis' options={yAxisOptions} />
       </div>
+      <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>
       <style jsx='true'>
         {`
         .filter-container {
@@ -76,6 +118,7 @@ function Filter() {
           padding: 10px;
           background-color: #C4C4C4;
           width: 80vw;
+          align-items: center;
         }
         `}
       </style>

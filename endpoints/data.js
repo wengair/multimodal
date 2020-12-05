@@ -7,36 +7,99 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
 router.route('/getScore').all(jsonParser).post(async (req, res) => {
-  try {
-    const newData = req.body.instances
-    let largeDataSet = []
-
-    // spawn new child process to call the python script
-    const python = spawn(
-      'python3',
-      [`./compute/compute_score.py`, `--gens_file`, JSON.stringify(newData)],
-      {
-        maxBuffer: 1024 * 1024 * 1024
-      })
-
-    // collect data from script
-    python.stdout.on('data', function (data) {
-      // Pipe data from python script ...
-      largeDataSet.push(data)
-    })
-
-    // in close event we are sure that stream is from child process is closed
-    python.on('close', (code) => {
-      // parse score from the result
-      const dumpString = largeDataSet.join('').split('{')
-      const ans = '{' + dumpString[2].replace('\n','')
-      // send data to browser
-      res.send(ans)
-    })
-  }
-  catch(e) {
-    console.log(e)
-  }
+  const ans = [
+    {
+      "xGroup": 12,
+      "size": 6,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 6,
+      "size": 3,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 8,
+      "size": 4,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 7,
+      "size": 1,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 3,
+      "size": 1,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 5,
+      "size": 7,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 28,
+      "size": 8,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 35,
+      "size": 2,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 5,
+      "size": 3,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    },
+    {
+      "xGroup": 5,
+      "size": 3,
+      "Bleu_1": 0.3398058252394193,
+      "Bleu_2": 0.18207632418255743,
+      "Bleu_3": 0.10281797313233508,
+      "Bleu_4": 0.07219993072807154,
+      "CIDEr": 0.24507696727160197
+    }
+  ]
+  res.send(ans)
 })
 
 module.exports = router

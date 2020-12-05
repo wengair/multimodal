@@ -1,9 +1,10 @@
 import React from 'react'
+import InstanceList from '../components/InstanceList'
 
 function ComparisonInstanceList() {
   return (
     <div>
-      ComparisonInstanceList
+    <InstanceList mode='comparision' />
     </div>
   )
 }

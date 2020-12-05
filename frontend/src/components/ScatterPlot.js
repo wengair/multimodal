@@ -1,110 +1,163 @@
-import React, {useEffect, useContext} from 'react'
-import {Data} from './DataContext'
-import * as d3 from 'd3'
+import React, {useEffect, useState} from 'react'
+//import * as d3 from 'd3'
+import ScatterPlotDraw from './ScatterPlotDraw'
 
-let Y = "BLEU_1"
-function Filter() {
-    const data = useContext(Data)
-    
+function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, selectedXaxis}) {
+    const [filteredGroups, setFilteredGroups] = useState([])
+
     useEffect(() => {
         if (data.predictions) {
-            const svg = d3.select("#plot");
-            const plot_svg_width = 600;
-            const plot_svg_height = 500;
-            const padding = 40;
-            const margin = 20;
-            
-            
-            let xScale = d3.scaleLinear()
-                .domain([0, d3.max(data.predictions, function(d) { return d.num_objects; })])
-                .range([padding, plot_svg_width - padding * 2]);
-        
-            let yScale = d3.scaleLinear()
-                .domain([0, d3.max(data.predictions, function(d) { return ((d.num_objects + 5) * 3); })])
-                .range([plot_svg_height - padding, padding]);
-            
-            let rScale = d3.scaleLinear()
-                .domain([0, d3.max(data.predictions, function(d) { return ((d.num_objects + 5) * 3); })])
-                .range([2, 5]);
-        
-            let aScale = d3.scaleSqrt()  
-                .domain([0, d3.max(data.predictions, function(d) { return ((d.num_objects + 5) * 3); })])
-                .range([0, 10]); 
-        
-            const axisB = d3.axisBottom()
-                .scale(xScale);
-            
-            const axisL = d3.axisLeft()
-                .scale(yScale);        
-
-            svg.append("g")
-                .attr("transform","translate(0, "+(plot_svg_height - padding)+")")
-                .attr("class","axis")
-                .call(axisB);
-            
-            svg.append("text")
-                .attr("y", plot_svg_height - margin)
-                .attr("x", plot_svg_width / 2)
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .style("font-size", "12px")
-                .text("Objects Number");
-            
-            svg.append("g")
-                .attr("class","axis")
-                .attr("transform","translate("+padding+",0)")
-                .call(axisL);
-                
-            svg.append("text")
-                .attr("transform", "translate(-2, "+(plot_svg_height / 2)+") rotate(-90)")
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .style("font-size", "12px")
-                .text(Y);
-
-            svg.selectAll("circle")
-                .data(data.predictions)
-                .enter()
-                .append("circle")
-                .attr("cx", function(d) {
-                    return xScale(d.num_objects);
+            if (selectedXaxis === 'num of objects') {
+                const filteredData = data.predictions.filter((instance) => {
+                    return instance.object_categories.includes(selectedObjName) 
                 })
-                .attr("cy", function(d) {
-                    return yScale(((d.num_objects + 5) * 3));
+                console.log(filteredData)
+    
+                const filterGroups = (filteredData, xAxis) => {
+                    const tempRecord = {}
+                    return filteredData.map(filteredInstance => {
+                        if(tempRecord[filteredInstance[xAxis]]) return
+                        tempRecord[filteredInstance[xAxis]] = true
+                        const instances = filteredData.filter(instance => instance[xAxis] === filteredInstance[xAxis])
+                        return {
+                            xGroup: filteredInstance[xAxis],
+                            instances: instances
+                        }
+                    }).filter(x => x)
+                }
+                const filterResult = filterGroups(filteredData, 'num_objects')
+                console.log(filterResult)
+                //console.log("True")
+                let ans = [
+                    {
+                        "xGroup": 12,
+                        "size": 6,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 6,
+                        "size": 3,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 8,
+                        "size": 4,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 7,
+                        "size": 1,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 3,
+                        "size": 1,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 5,
+                        "size": 7,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 28,
+                        "size": 8,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 35,
+                        "size": 2,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 14,
+                        "size": 3,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                        {
+                        "xGroup": 21,
+                        "size": 3,
+                        "Bleu_1": Math.random(),
+                        "Bleu_2": 0.18207632418255743,
+                        "Bleu_3": 0.10281797313233508,
+                        "Bleu_4": 0.07219993072807154,
+                        "CIDEr": 0.24507696727160197
+                        },
+                    ]
+                setFilteredGroups(ans)
+                // still not work on my Windows system
+                const getScore = (data) => {
+                    fetch('http://172.28.208.1:8080/api/v1/data/getScore', {method: 'POST'})
+                        .then(res => res.json())
+                        .then(score => console.log(score))
+                        .catch(e => console.log(e))
+                    }
+                getScore()
+            } else {
+                const filteredData = data.predictions.filter((instance) => {
+                    return instance.object_categories.includes(selectedObjName) 
                 })
-                .attr("r",function(d) {
-                    return Math.sqrt((plot_svg_height - ((d.num_objects + 5) * 3)) / Math.PI);
-                })
-                .attr("r", function(d) {
-                    return rScale(((d.num_objects + 5) * 3));
-                })
-                .attr("r", function(d) {
-                    return aScale(((d.num_objects + 5) * 3));
-                })
-                .attr("fill", function(d) {
-                    return "rgb(0, 0, " + Math.round(((d.num_objects + 5) * 3)) + ")";
-                });
-
+                console.log(filteredData)
+    
+                const filterGroups = (filteredData, xAxis) => {
+                    const tempRecord = {}
+                    return filteredData.map(filteredInstance => {
+                        if(tempRecord[filteredInstance[xAxis]]) return
+                        tempRecord[filteredInstance[xAxis]] = true
+                        const instances = filteredData.filter(instance => instance[xAxis] === filteredInstance[xAxis])
+                        return {
+                            xGroup: filteredInstance[xAxis],
+                            instances: instances
+                        }
+                    }).filter(x => x)
+                }
+                const filterResult = filterGroups(filteredData, 'num_objects')
+                console.log(filterResult)
+            }         
         }
         	    
-    }, [data])
+    }, [data, selectedObjName, selectedObjNumber, selectedYaxis, selectedXaxis])
 
     return (
-        <div className = "plot">
-            <svg id="plot" height={500} width={600}></svg>
-        
-            <style jsx='true'>
-                {`
-                .plot {
-                float: left;
-                width: 600px;
-                height: 500px;
-                }
-                `}
-            </style>
-      </div>
+        <ScatterPlotDraw filteredGroups={filteredGroups} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>        
     )
     
 }
 
-export default Filter
+export default ScatterPlot
