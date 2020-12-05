@@ -1,8 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react'
 import SingleListBox from './SingleListBox'
+import ScatterPlot from './ScatterPlot'
+import InstanceCard from './InstanceCard'
+import {Link} from 'react-router-dom'
 // import {Data} from './DataContext'
 
-function Filter({data, setFilteredData}) {
+function Filter({data, filteredData, setFilteredData, mode}) {
   // const data = useContext(Data)
   const [objectNameOptions, setObjectNameOptions] = useState([])
   const [objectNumberOptions, setObjectNumberOptions] = useState([])
@@ -15,16 +18,18 @@ function Filter({data, setFilteredData}) {
   // option format: [value for logic, string to display]
 
   const xAxisOptions = [
+    ['objnumber', 'Object Number'],
     ['bleu', 'Bleu Score'],
     ['cider', 'CIDEr Score'],
   ]
 
   const yAxisOptions = [
-    ['cider', 'CIDEr Score'],
     ['bleu', 'Bleu Score'],
+    ['cider', 'CIDEr Score'],
   ]
   
   const markOptions = [
+    ['true', '-'],
     ['true', 'True'],
     ['false', 'False'],
   ]
@@ -86,7 +91,7 @@ function Filter({data, setFilteredData}) {
 
   useEffect(() => {
     if(data.predictions){
-    console.log('options has changed, the new result = ', selectedObjName, selectedObjNumber)
+    //console.log('options has changed, the new result = ', selectedObjName, selectedObjNumber)
   
     const findMatchAction = (verbs, instance) => {
       if(!verbs) return true
@@ -99,8 +104,8 @@ function Filter({data, setFilteredData}) {
       return found
     }
     const filteredData = data.predictions.filter((instance) => {
-      console.log(findMatchAction(selectedActionType,instance))
-      console.log(selectedObjNumber)
+      //console.log(findMatchAction(selectedActionType,instance))
+      //console.log(selectedObjNumber)
        return (selectedObjName ? instance.object_categories.includes(selectedObjName) : true) && 
               (selectedObjNumber ? (instance.num_objects === selectedObjNumber) : true) && 
               findMatchAction(selectedActionType,instance)
@@ -108,16 +113,27 @@ function Filter({data, setFilteredData}) {
    setFilteredData(filteredData) // pass filtered data in
     }
   },[selectedObjName, selectedObjNumber,selectedActionType])
-  console.log('objectNumberOptions',objectNumberOptions)
+  //console.log('objectNumberOptions',objectNumberOptions)
   return (
     <div>
       <div className='filter-container'>
         <SingleListBox label='X Axis' options={xAxisOptions} />
         <SingleListBox label='Y Axis' options={yAxisOptions} />
-        <SingleListBox label='Object Name' options= {objectNameOptions} setOption={setSelectedObjName} />
-        <SingleListBox label='Object Number' options= {objectNumberOptions} setOption={setSelectedObjNumber} />
-        <SingleListBox label='Action Type' options={actionTypeOptions} setOption={setSelectedActionType} />
+        <SingleListBox label='Object Name' options= {[['true','-'],...objectNameOptions]} setOption={setSelectedObjName} />
+        <SingleListBox label='Object Number' options= {[['true','-'],...objectNumberOptions]} setOption={setSelectedObjNumber} />
+        <SingleListBox label='Action Type' options={[['true','-'],...actionTypeOptions]} setOption={setSelectedActionType} />
         <SingleListBox label='Mark' options={markOptions} />
+      </div>
+      <div className='content-container'>
+        <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYasix={selectedYasix} />
+        <div className='card-area'>
+          <div className='cardss-container'>
+          {filteredData && filteredData.map((instance, idx) => {
+            const path = instance.img_fn.split('/')[1].split('@')[0]
+            return <Link to={`/${mode}/instances/${path}`} key={idx}><InstanceCard instance={instance} /></Link>
+          })}
+          </div>
+        </div>
       </div>
       <style jsx='true'>
         {`
@@ -126,8 +142,22 @@ function Filter({data, setFilteredData}) {
           justify-content: space-around;
           padding: 10px;
           background-color: #C4C4C4;
-          width: 80vw;
+          width: 95vw;
           align-items: center;
+        }
+
+        .content-container {
+          display: flex;
+        }
+
+        .cardss-container {
+          display: flex;
+          flex-wrap: wrap;
+          width: 100%;
+        }
+
+        .card-area {
+          flex-grow: 1;
         }
         `}
       </style>

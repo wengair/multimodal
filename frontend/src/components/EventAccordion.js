@@ -7,7 +7,7 @@ import {
 } from "@reach/accordion";
 import "@reach/accordion/styles.css"
 
-function EventAccordion({instance, groundTruth}) {
+function EventAccordion({instance, groundTruth, mode}) {
 
   return (
     <Accordion>
@@ -18,14 +18,14 @@ function EventAccordion({instance, groundTruth}) {
                 <AccordionButton>Event{idx + 1}: {event.event_name}</AccordionButton>
               <AccordionPanel>
                 <div>
-                  <p>Scene: {instance.events.place}</p>
+                  <p>Scene: {instance.place}</p>
                   <p>Object count: {instance.num_objects}</p>
                   <p>Object name: {instance.object_categories.join(', ')}</p>
                   <p>Action type: {event.verbs.join(', ')}</p>
                 </div>
                 <div className='analysis-container'>
                   <div className='result-container ground-truth'>
-                    <p>Ground Truth</p> 
+                    <p>{mode === 'comparison' ? 'Ground Truth' : 'Training Data'}</p> 
                     {/* Training data */}
                     <p>Intent:</p>
                     {groundTruth.events[idx].intent}
@@ -34,6 +34,7 @@ function EventAccordion({instance, groundTruth}) {
                     <p>After:</p>
                     {groundTruth.events[idx].after}
                   </div>
+                  {mode === 'comparison' &&
                   <div className='result-container'>
                     <p>Predicted</p>
                     <p>Intent:</p>
@@ -42,7 +43,7 @@ function EventAccordion({instance, groundTruth}) {
                     {event.before}
                     <p>After:</p>
                     {event.after}
-                  </div>
+                  </div>}
                 </div>
               </AccordionPanel>
             </AccordionItem>
