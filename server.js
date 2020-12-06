@@ -5,7 +5,7 @@ const port = 8080
 // Body Parser Middleware
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
-
+const cors = require('cors')
 // app.post('/', (req, res) => {
 //   const newData = {test: "testvalue"}
 //   console.log(req.body.test) 
@@ -33,6 +33,16 @@ const jsonParser = bodyParser.json()
 //     res.send(largeDataSet.join(''))
 //   })
 // })
+
+// general settings
+app.use(cors())
+app.use((req, res, next) => {
+  // Enabling CORS
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, HEAD, PATCH')
+  res.header('Access-Control-Allow-Headers', '*')
+  next()
+})
 
 const endpoints = require('./endpoints/data.js') // file name doesn't affect
 app.use('/api/v1/data', endpoints)

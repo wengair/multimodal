@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
-import SingleListBox from './SingleListBox'
 import ScatterPlot from './ScatterPlot'
+import SingleListBox from './SingleListBox'
 import InstanceCard from './InstanceCard'
 import {Link} from 'react-router-dom'
 // import {Data} from './DataContext'
@@ -13,19 +13,18 @@ function Filter({data, filteredData, setFilteredData, mode}) {
   const [selectedObjName, setSelectedObjName] = useState()
   const [selectedObjNumber, setSelectedObjNumber] = useState()
   const [selectedActionType, setSelectedActionType] = useState()
-  const [selectedXasix, setSelectedXasix] = useState()
-  const [selectedYasix, setSelectedYasix] = useState()
+  const [selectedXaxis, setSelectedXaxis] = useState()
+  const [selectedYaxis, setSelectedYaxis] = useState()
   // option format: [value for logic, string to display]
 
-  const xAxisOptions = [
-    ['objnumber', 'Object Number'],
-    ['bleu', 'Bleu Score'],
-    ['cider', 'CIDEr Score'],
+  const yAxisOptions = [
+    ['Bleu_1', 'Bleu Score'],
+    ['Cider', 'CIDEr Score'],
   ]
 
-  const yAxisOptions = [
-    ['bleu', 'Bleu Score'],
-    ['cider', 'CIDEr Score'],
+  const xAxisOptions = [
+    ['num of objects', 'Num of Objects'],
+    ['name of object', 'Name of Objects'],
   ]
   
   const markOptions = [
@@ -33,6 +32,7 @@ function Filter({data, filteredData, setFilteredData, mode}) {
     ['true', 'True'],
     ['false', 'False'],
   ]
+
   const objectSet = new Set()
   const objectNumSet = new Set()
   const verbSet = new Set()
@@ -92,7 +92,7 @@ function Filter({data, filteredData, setFilteredData, mode}) {
 // Update ObjName based on the chosen ObjNum or ActionType
 useEffect(() => {
   const tempObjectNameOptions = []
-  // Based on ObjNumber (DONE)
+  // Based on ObjNumber 
   if(selectedObjNumber) {
     if(filteredData) {
       filteredData.forEach(instance => {
@@ -108,7 +108,7 @@ useEffect(() => {
       setObjectNameOptions(tempObjectNameOptions)
     }
   }
-  // Based on ActionType (DONE)
+  // Based on ActionType 
   else if(filteredData) {
     filteredData.forEach(instance => {
       instance.events.forEach(event => {
@@ -133,7 +133,7 @@ objectNameOptions.sort()
   useEffect(()=>{
     const tempObjectNumberOptions = []
 
-    // Based on ActionType(DONE)
+    // Based on ActionType
     if(filteredData) {
       filteredData.forEach(instance => {
         instance.events.forEach(event => {
@@ -149,7 +149,7 @@ objectNameOptions.sort()
       })
       setObjectNumberOptions(tempObjectNumberOptions)
     }
-     // Based on ObjName (DONE)
+     // Based on ObjName 
     else if(selectedObjName) {
       if(filteredData) {
         filteredData.forEach(instance => {
@@ -241,15 +241,14 @@ objectNameOptions.sort()
   return (
     <div>
       <div className='filter-container'>
-        <SingleListBox label='X Axis' options={xAxisOptions} />
-        <SingleListBox label='Y Axis' options={yAxisOptions} />
+        <SingleListBox label='X Axis' options={xAxisOptions} setOption={setSelectedXaxis}/>
+        <SingleListBox label='Y Axis' options={yAxisOptions} setOption={setSelectedYaxis}/>
         <SingleListBox label='Object Name' options= {[['true','-'],...objectNameOptions]} setOption={setSelectedObjName} />
         <SingleListBox label='Object Number' options= {[['true','-'],...objectNumberOptions]} setOption={setSelectedObjNumber} />
         <SingleListBox label='Action Type' options={[['true','-'],...actionTypeOptions]} setOption={setSelectedActionType} />
         <SingleListBox label='Mark' options={markOptions} />
       </div>
       <div className='content-container'>
-        <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYasix={selectedYasix} />
         <div className='card-area'>
           <div className='cardss-container'>
           {filteredData && filteredData.map((instance, idx) => {
@@ -259,6 +258,7 @@ objectNameOptions.sort()
           </div>
         </div>
       </div>
+      <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>
       <style jsx='true'>
         {`
         .filter-container {

@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import Filter from './Filter'
+//import ScatterPlot from './ScatterPlot'
 import InstanceCard from './InstanceCard'
 import {Link} from 'react-router-dom'
 // import data from '../data/200_sample_val_conv.json'
@@ -32,12 +33,14 @@ function InstanceList({mode}) {
 
         .cards-container {
           display: flex;
-          width: 80vw;
+          width: 50%;
           flex-wrap: wrap;
         }
         `}
       </style>
+      
     </div>
+    
   )
 }
 
