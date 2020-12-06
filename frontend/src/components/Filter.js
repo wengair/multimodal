@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import ScatterPlot from './ScatterPlot'
 import SingleListBox from './SingleListBox'
-import ScatterPlot from './ScatterPlot'
 import InstanceCard from './InstanceCard'
 import {Link} from 'react-router-dom'
 // import {Data} from './DataContext'
