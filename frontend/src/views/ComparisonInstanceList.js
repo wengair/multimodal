@@ -4,7 +4,7 @@ import InstanceList from '../components/InstanceList'
 function ComparisonInstanceList() {
   return (
     <div>
-    <InstanceList mode='comparision' />
+    <InstanceList mode='comparison' />
     </div>
   )
 }
