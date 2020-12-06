@@ -242,15 +242,14 @@ objectNameOptions.sort()
   return (
     <div>
       <div className='filter-container'>
-        <SingleListBox label='X Axis' options={xAxisOptions} />
-        <SingleListBox label='Y Axis' options={yAxisOptions} />
+        <SingleListBox label='X Axis' options={xAxisOptions} setOption={setSelectedXaxis}/>
+        <SingleListBox label='Y Axis' options={yAxisOptions} setOption={setSelectedYaxis}/>
         <SingleListBox label='Object Name' options= {[['true','-'],...objectNameOptions]} setOption={setSelectedObjName} />
         <SingleListBox label='Object Number' options= {[['true','-'],...objectNumberOptions]} setOption={setSelectedObjNumber} />
         <SingleListBox label='Action Type' options={[['true','-'],...actionTypeOptions]} setOption={setSelectedActionType} />
         <SingleListBox label='Mark' options={markOptions} />
       </div>
       <div className='content-container'>
-        <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYasix={selectedYasix} />
         <div className='card-area'>
           <div className='cardss-container'>
           {filteredData && filteredData.map((instance, idx) => {
