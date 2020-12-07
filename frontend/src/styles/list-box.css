@@ -12,6 +12,8 @@
   background: hsl(0, 0%, 100%);
   outline: none;
   border: solid 1px hsla(0, 0%, 0%, 0.25);
+  max-height: 500px;
+  overflow: auto;
 }
 
 [data-reach-listbox-popover]:focus-within {
@@ -67,6 +69,7 @@
   padding: 1px 10px 2px;
   border: 1px solid;
   border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+  background-color: white;
   cursor: default;
   user-select: none;
 }

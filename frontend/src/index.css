@@ -1,5 +1,12 @@
 @import url('./styles/menu-button.css');
 @import url('./styles/list-box.css');
+@import url('./styles/accordion.css');
+
+:root {
+  --c-strong-blue: #1c79c0;
+  --c-vivid-blue: #0389ff;
+  --c-cyan: #0dd3ff;
+}
 
 body {
   margin: 0;
@@ -13,4 +20,13 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:visited{
+  color:inherit;
 }

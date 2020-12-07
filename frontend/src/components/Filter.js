@@ -259,16 +259,17 @@ objectNameOptions.sort()
    setFilteredData(filteredData) // pass filtered data in
     }
   },[selectedObjName, selectedObjNumber,selectedActionType])
+
   return (
     <div>
       <div className='filter-container'>
-        <SingleListBox label='X Axis' options={xAxisOptions} setOption={setSelectedXaxis}/>
-        <SingleListBox label='Y Axis' options={yAxisOptions} setOption={setSelectedYaxis}/>
+        <SingleListBox label='X Axis' options={[['true','-'],...xAxisOptions]} setOption={setSelectedXaxis}/>
+        <SingleListBox label='Y Axis' options={[['true','-'],...yAxisOptions]} setOption={setSelectedYaxis}/>
         <SingleListBox label='Object Name' options= {[['true','-'],...objectNameOptions]} setOption={setSelectedObjName} />
         <SingleListBox label='Object Number' options= {[['true','-'],...objectNumberOptions]} setOption={setSelectedObjNumber} />
         <SingleListBox label='Action Type' options={[['true','-'],...actionTypeOptions]} setOption={setSelectedActionType} />
-        <SingleListBox label='Mark' options={markOptions} />
-        <button onClick={()=>window.location.reload()}>Reset</button>
+        {/* <SingleListBox label='Mark' options={markOptions} /> */}
+        <button onClick={()=>window.location.reload()} className='reset-btn'>Reset</button>
       </div>
       <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>
       <div className='content-container'>
@@ -287,9 +288,17 @@ objectNameOptions.sort()
           display: flex;
           justify-content: space-around;
           padding: 10px;
-          background-color: #C4C4C4;
-          width: 95vw;
+          border-bottom: 3px solid var(--c-strong-blue);
           align-items: center;
+          margin-bottom: 15px;
+        }
+
+        .reset-btn {
+          font-size: 16px;
+          background: white;
+          border: 1px solid;
+          border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+          cursor: pointer;
         }
 
         .content-container {

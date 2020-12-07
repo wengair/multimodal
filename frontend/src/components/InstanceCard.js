@@ -2,30 +2,41 @@ import React from 'react'
 
 function InstanceCard({instance}) {
   const eventlist = instance.events.map(function(event,index) {
-  return <h2>Event {index+1}: {event.event_name}</h2>;
+  return <p key={index}><b>Event {index + 1}:</b> {event.event_name}</p>;
 })
 
   const baseURL = '/data/image_val_200/';
   const imgPath = baseURL + instance.img_fn
   return (
     <div className='card-container'>
-      <img className= 'cardImg' src= {imgPath} alt='place holder' />
-
-      <p className= 'eventName'>{eventlist}</p>
-      <p>Scene: {instance.place}</p>
+      <img className= 'card-img' src= {imgPath} alt='place holder' />
+      <div className='card-text'>
+        <p><b>Scene:</b> {instance.place}</p>
+        {eventlist}
+      </div>
       <style jsx='true'>
         {`
         .card-container {
-          width: 200px;
-          height: 100%;
-          padding: 5px;
+          width: 230px;
+          height: 96.5%;
           margin: 5px;
-          border: 1px solid black;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+          transition: 0.3s;
         }
-        .cardImg{
-          width: 200px;
-          height: 100px;
+
+        .card-container:hover {
+          box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+          transform: scale(1.02);
         }
+
+        .card-img{
+          width: 100%;
+        }
+
+        .card-text {
+          padding: 5px;
+        }
+
         .eventName{
           font-size: 10px;
         }

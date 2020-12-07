@@ -6,39 +6,49 @@ function Nav() {
   const history = useHistory()
   const location = useLocation()
   const [showNav, setShowNav] = useState(true)
+  const tagIds = ['nav-tag-exploration', 'nav-tag-eimparison']
 
   useEffect(() => {
     if(/^\S*\/instances\//.test(location.pathname)) setShowNav(false)
     else setShowNav(true)
-  }, [location])
+    
+    if(showNav) {
+      for(const tagId of tagIds) document.getElementById(tagId).classList.remove('choosen')
+      const path = location.pathname.split('/')
+      if (path.includes('explore')) document.getElementById('nav-tag-exploration').classList.add('choosen')
+      else if(path.includes('comparison')) document.getElementById('nav-tag-eimparison').classList.add('choosen')
+    }
+  }, [location, showNav])
 
-  /*const jumpTo = (path1, path2) => {
-    history.push({pathname: `/${path1}/${path2}`})
-  }
-  
-  const exploreDropdown = [
-    ['Instance', () => jumpTo('explore', 'instances')],
-    ['Scatter Plot', () => jumpTo('explore', 'plot')],
-  ]
-  
-  const comparisonDropdown = [
-    ['Instance', () => jumpTo('comparison', 'instances')],
-    ['Scatter Plot', () => jumpTo('comparison', 'plot')],
-  ]*/
 
   return (showNav &&
     <div className='nav-container'>
       <p>Mode: </p>
-      <div><Link to={'/explore/instances'}>Exploration  |</Link></div>
-      <div><Link to={'/comparison/instances'}>| Comparison</Link></div>
+      <div id='nav-tag-exploration'><Link to={'/explore/instances'}>Exploration</Link></div>
+      <div id='nav-tag-eimparison'><Link to={'/comparison/instances'}>Comparison</Link></div>
       <style jsx='true'>
         {`
         .nav-container {
-          height: 140px;
+          height: 70px;
           padding: 0px 50px;
           display: flex;
           justify-content: flex-end;
           align-items: center;
+        }
+
+        #nav-tag-exploration {
+          padding: 2px;
+          margin: 0px 5px;
+        }
+        
+        #nav-tag-eimparison {
+          padding: 2px;
+          margin: 0px 5px;
+        }
+
+        .choosen {
+          padding-bottom: 0px !important;
+          border-bottom: 3px solid var(--c-strong-blue);
         }
         `}
       </style>
