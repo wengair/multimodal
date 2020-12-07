@@ -24,7 +24,6 @@ function Filter({data, filteredData, setFilteredData, mode}) {
 
   const xAxisOptions = [
     ['num of objects', 'Num of Objects'],
-    ['name of object', 'Name of Objects'],
   ]
   
   const markOptions = [
@@ -109,22 +108,25 @@ useEffect(() => {
     }
   }
   // Based on ActionType 
-  else if(filteredData) {
-    filteredData.forEach(instance => {
-      instance.events.forEach(event => {
-        event.verbs.forEach(verbName => {
-          if(findMatchAction(verbName, instance)){
-            instance.object_categories.forEach(objectName => {
-              objectSet.add(objectName.toLowerCase())
-            })
-          }
+  else if(selectedActionType){
+    if(filteredData) {
+      filteredData.forEach(instance => {
+        instance.events.forEach(event => {
+          event.verbs.forEach(verbName => {
+            if(findMatchAction(verbName, instance)){
+              instance.object_categories.forEach(objectName => {
+                objectSet.add(objectName.toLowerCase())
+              })
+            }
+          })
         })
       })
-    })
-    objectSet.forEach(objectName => {
-      tempObjectNameOptions.push([objectName, objectName])
-    })
-    setObjectNameOptions(tempObjectNameOptions)
+      objectSet.forEach(objectName => {
+        tempObjectNameOptions.push([objectName, objectName])
+      })
+      setObjectNameOptions(tempObjectNameOptions)
+    }
+
   }
 },[filteredData],[selectedObjNumber],[selectedActionType])
 objectNameOptions.sort()
@@ -134,23 +136,27 @@ objectNameOptions.sort()
     const tempObjectNumberOptions = []
 
     // Based on ActionType
-    if(filteredData) {
-      filteredData.forEach(instance => {
-        instance.events.forEach(event => {
-          event.verbs.forEach(verbName => {
-            if(findMatchAction(verbName, instance)){
-              objectNumSet.add(instance.num_objects)
-            }
+    if(selectedActionType){
+      console.log('selectedVerbs')
+      if(filteredData) {
+        filteredData.forEach(instance => {
+          instance.events.forEach(event => {
+            event.verbs.forEach(verbName => {
+              if(findMatchAction(verbName, instance)){
+                objectNumSet.add(instance.num_objects)
+              }
+            })
           })
         })
-      })
-      objectNumSet.forEach(objNumber => {
-        tempObjectNumberOptions.push([objNumber, objNumber])
-      })
-      setObjectNumberOptions(tempObjectNumberOptions)
+        objectNumSet.forEach(objNumber => {
+          tempObjectNumberOptions.push([objNumber, objNumber])
+        })
+        setObjectNumberOptions(tempObjectNumberOptions)
+      }
     }
      // Based on ObjName 
     else if(selectedObjName) {
+      console.log('selectedObjName')
       if(filteredData) {
         filteredData.forEach(instance => {
           instance.object_categories.forEach(objectName => {
@@ -165,13 +171,28 @@ objectNameOptions.sort()
         setObjectNumberOptions(tempObjectNumberOptions)
       }
     }
+    // // Based on ObjNumber
+    // else if(selectedObjNumber) {
+    //   console.log('selectedObjNumber')
+    //   if(filteredData) {
+    //     data.predictions.forEach(instance => {
+  
+    //         objectNumSet.add(instance.num_objects)
+          
+    //     })
+    //     objectNumSet.forEach(objectNumber => {
+    //       tempObjectNumberOptions.push([objectNumber, objectNumber])
+    //     })
+    //     setObjectNumberOptions(tempObjectNumberOptions)
+    //   }
+    // }
   },[filteredData],[selectedObjName],[selectedActionType])
   objectNumberOptions.sort(function(a,b){return a[0] - b[0]});
 
 // Update ActionType based on the chosen ObjNumber or ObjName
   useEffect(() => {
     const actionTypeOptions = []
-    // Based on ObjNumber (DONE)
+    // Based on ObjNumber 
     if(selectedObjNumber) {
       if(filteredData) {
         filteredData.forEach(instance => {
@@ -189,7 +210,7 @@ objectNameOptions.sort()
         setActionTypeOptions(actionTypeOptions)
       }
     }
-    // Based on ObjName (DONE)
+    // Based on ObjName
     else if(selectedObjName) {
       if(filteredData) {
         filteredData.forEach(instance => {
@@ -247,7 +268,9 @@ objectNameOptions.sort()
         <SingleListBox label='Object Number' options= {[['true','-'],...objectNumberOptions]} setOption={setSelectedObjNumber} />
         <SingleListBox label='Action Type' options={[['true','-'],...actionTypeOptions]} setOption={setSelectedActionType} />
         <SingleListBox label='Mark' options={markOptions} />
+        <button onClick={()=>window.location.reload()}>Reset</button>
       </div>
+      <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>
       <div className='content-container'>
         <div className='card-area'>
           <div className='cardss-container'>
@@ -258,7 +281,6 @@ objectNameOptions.sort()
           </div>
         </div>
       </div>
-      <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>
       <style jsx='true'>
         {`
         .filter-container {
