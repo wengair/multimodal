@@ -27,108 +27,130 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
                 }
                 const filterResult = filterGroups(filteredData, 'num_objects')
                 console.log(filterResult)
-                //console.log("True")
-                let ans = [
-                    {
-                        "xGroup": 12,
-                        "size": 6,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
+                const getScore = (oneFilteredResult) => {
+                    return fetch('http://127.0.0.1:8080/api/v1/data/getScore', {
+                        method: 'POST',
+                        headers: {
+                          'content-type': 'application/json',
                         },
-                        {
-                        "xGroup": 6,
-                        "size": 3,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 8,
-                        "size": 4,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 7,
-                        "size": 1,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 3,
-                        "size": 1,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 5,
-                        "size": 7,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 28,
-                        "size": 8,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 35,
-                        "size": 2,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 14,
-                        "size": 3,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                        {
-                        "xGroup": 21,
-                        "size": 3,
-                        "Bleu_1": Math.random(),
-                        "Bleu_2": 0.18207632418255743,
-                        "Bleu_3": 0.10281797313233508,
-                        "Bleu_4": 0.07219993072807154,
-                        "CIDEr": 0.24507696727160197
-                        },
-                    ]
-                setFilteredGroups(ans)
-                // still not work on my Windows system
-                const getScore = (data) => {
-                    fetch('http://172.28.208.1:8080/api/v1/data/getScore', {method: 'POST'})
+                        body: JSON.stringify({
+                          xGroup: oneFilteredResult.xGroup,
+                          instances: oneFilteredResult.instances
+                        }),
+                      })
                         .then(res => res.json())
-                        .then(score => console.log(score))
+                        .then(score => score)
                         .catch(e => console.log(e))
-                    }
-                getScore()
+                }
+                Promise.all(filterResult.map(oneFilteredResult => getScore(oneFilteredResult)))
+                .then(result => {
+                    console.log('in promise.all')
+                    console.log(result)
+                    setFilteredGroups(result)
+                })
+
+                //console.log("True")
+                // let ans = [
+                //     {
+                //         "xGroup": 12,
+                //         "size": 6,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 6,
+                //         "size": 3,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 8,
+                //         "size": 4,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 7,
+                //         "size": 1,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 3,
+                //         "size": 1,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 5,
+                //         "size": 7,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 28,
+                //         "size": 8,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 35,
+                //         "size": 2,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 14,
+                //         "size": 3,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //         {
+                //         "xGroup": 21,
+                //         "size": 3,
+                //         "Bleu_1": Math.random(),
+                //         "Bleu_2": 0.18207632418255743,
+                //         "Bleu_3": 0.10281797313233508,
+                //         "Bleu_4": 0.07219993072807154,
+                //         "CIDEr": 0.24507696727160197
+                //         },
+                //     ]
+                // setFilteredGroups(ans)
+                // // still not work on my Windows system
+                // const getScore = (data) => {
+                //     fetch('http://127.0.0.1:8080/api/v1/data/getScore', {method: 'POST'})
+                //         .then(res => res.json())
+                //         .then(score => setFilteredGroups(score))
+                //         .catch(e => console.log(e))
+                //     }
+                // getScore()
             } else {
                 const filteredData = data.predictions.filter((instance) => {
                     return instance.object_categories.includes(selectedObjName) 

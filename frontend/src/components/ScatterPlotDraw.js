@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, selectedYaxis, selectedXaxis}) {
     
     useEffect(()=> {
+        console.log({filteredGroups})
         d3.selectAll("svg > *").remove()    
         const svg = d3.select("#plot")
         const plot_svg_width = 600
