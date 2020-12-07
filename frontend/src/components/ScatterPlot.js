@@ -11,7 +11,7 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
                 const filteredData = data.predictions.filter((instance) => {
                     return instance.object_categories.includes(selectedObjName) 
                 })
-                console.log(filteredData)
+                console.log({filteredData})
     
                 const filterGroups = (filteredData, xAxis) => {
                     const tempRecord = {}
@@ -26,7 +26,7 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
                     }).filter(x => x)
                 }
                 const filterResult = filterGroups(filteredData, 'num_objects')
-                console.log(filterResult)
+                console.log({filterResult})
                 const getScore = (oneFilteredResult) => {
                     return fetch('http://127.0.0.1:8080/api/v1/data/getScore', {
                         method: 'POST',
@@ -42,12 +42,14 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
                         .then(score => score)
                         .catch(e => console.log(e))
                 }
+
                 Promise.all(filterResult.map(oneFilteredResult => getScore(oneFilteredResult)))
-                .then(result => {
-                    console.log('in promise.all')
-                    console.log(result)
-                    setFilteredGroups(result)
-                })
+                    .then(result => {
+                        console.log('in promise.all')
+                        console.log(result)
+                        setFilteredGroups(result)
+                    })
+                    .catch(e => console.log(e))
 
                 //console.log("True")
                 // let ans = [
@@ -155,7 +157,7 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
                 const filteredData = data.predictions.filter((instance) => {
                     return instance.object_categories.includes(selectedObjName) 
                 })
-                console.log(filteredData)
+                console.log({filteredData})
     
                 const filterGroups = (filteredData, xAxis) => {
                     const tempRecord = {}

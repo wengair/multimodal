@@ -8,6 +8,7 @@ const jsonParser = bodyParser.json()
 
 router.route('/getScore').all(jsonParser).post(async (req, res) => {
   try {
+    const xGroup = req.body.xGroup
     const newData = req.body.instances
     let largeDataSet = []
 
@@ -31,7 +32,10 @@ router.route('/getScore').all(jsonParser).post(async (req, res) => {
       const dumpString = largeDataSet.join('').split('{')
       const ans = '{' + dumpString[2].replace('\n','')
       // send data to browser
-      res.send(ans)
+      res.send({
+        xGroup: xGroup,
+        size: newData.length,
+        ...JSON.parse(ans)})
     })
   }
   catch(e) {
