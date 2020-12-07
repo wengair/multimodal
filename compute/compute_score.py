@@ -20,12 +20,22 @@ def split_sample(inst, inf_name, event):
     ins['event_idx'] = event['event_idx']
     return ins
 
+def use_same_id(sent):
+    r_sent = sent.replace("'", " '")
+    r_sent = ' '.join([g if not g.isdigit() else '1' for g in r_sent.split()]).strip()
+    r_sent = r_sent.replace(" '","'")
+    return r_sent
+
 def compute_metric_inference(gens_file, refs_file, calculate_diversity=False, train_file=None):
     with open(refs_file) as f:
         refs_list = json.load(f)
     excluded = ['inference_relation', 'generations', 'intents', 'befores', 'afters', 'bad', 'events']
     gens_list_good = json.loads(gens_file)
-
+    # with open(gens_file) as f:
+    #     gens_list_good = json.load(f)
+    # modify to output group name
+    # group_name = gens_list_good['xGroup']
+    # gens_list_good = gens_list_good['instances']
     # convert the group (samples) to correct format: gens_list
     gens_list = []
     for sample in gens_list_good:
@@ -101,13 +111,15 @@ def compute_metric_inference(gens_file, refs_file, calculate_diversity=False, tr
                 # print(method[m], score[m])
         else:
             output[method] = score
-
+    # output['xGroup'] = group_name
     print(json.dumps(output))
     return json.dumps(output)
 
 
 
 if __name__ == "__main__":
+    # from ipdb import launch_ipdb_on_exception
+    # with launch_ipdb_on_exception():
     parser = argparse.ArgumentParser()
     parser.add_argument("--refs_file", type=str, default='./frontend/public/data/val_annots.json')
     parser.add_argument("--gens_file", type=str, default='./frontend/public/data/200_sample_val_conv.json')

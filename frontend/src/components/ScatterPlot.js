@@ -7,6 +7,7 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
 
     useEffect(() => {
         if (data.predictions) {
+            let selectedXaxis = 'num of objects'
             if (selectedXaxis === 'num of objects') {
                 const filteredData = data.predictions.filter((instance) => {
                     return instance.object_categories.includes(selectedObjName) 
@@ -28,6 +29,7 @@ function ScatterPlot({data, selectedObjNumber, selectedObjName, selectedYaxis, s
                 const filterResult = filterGroups(filteredData, 'num_objects')
                 console.log({filterResult})
                 const getScore = (oneFilteredResult) => {
+                    console.log('oneFilteredResult',oneFilteredResult)
                     return fetch('http://127.0.0.1:8080/api/v1/data/getScore', {
                         method: 'POST',
                         headers: {
