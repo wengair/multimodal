@@ -24,25 +24,25 @@ function EventAccordion({instance, groundTruth, mode}) {
                   <p>Action type: {event.verbs.join(', ')}</p>
                 </div>
                 <div className='analysis-container'>
-                  <div className='result-container ground-truth'>
-                    <p>{mode === 'comparison' ? 'Ground Truth' : 'Training Data'}</p> 
+                  <div className='result-container'>
+                    <p className='analysis-title'>{mode === 'comparison' ? 'Ground Truth' : 'Training Data'}</p>
                     {/* Training data */}
-                    <p>Intent:</p>
-                    {groundTruth.events[idx].intent}
-                    <p>Before:</p>
-                    {groundTruth.events[idx].before}
-                    <p>After:</p>
-                    {groundTruth.events[idx].after}
+                    <p className='analysis-sub-title'>Intent:</p>
+                    <p className='analysis-sentence'> - {groundTruth.events[idx].intent}</p>
+                    <p className='analysis-sub-title'>Before:</p>
+                    <p className='analysis-sentence'> - {groundTruth.events[idx].before}</p>
+                    <p className='analysis-sub-title'>After:</p>
+                    <p className='analysis-sentence'> - {groundTruth.events[idx].after}</p>
                   </div>
                   {mode === 'comparison' &&
                   <div className='result-container'>
-                    <p>Predicted</p>
-                    <p>Intent:</p>
-                    {event.intent}
-                    <p>Before:</p>
-                    {event.before}
-                    <p>After:</p>
-                    {event.after}
+                    <p className='analysis-title'>Predicted</p>
+                    <p className='analysis-sub-title'>Intent:</p>
+                    <p className='analysis-sentence'> - {event.intent}</p>
+                    <p className='analysis-sub-title'>Before:</p>
+                    <p className='analysis-sentence'> - {event.before}</p>
+                    <p className='analysis-sub-title'>After:</p>
+                    <p className='analysis-sentence'> - {event.after}</p>
                   </div>}
                 </div>
               </AccordionPanel>
@@ -73,13 +73,19 @@ function EventAccordion({instance, groundTruth, mode}) {
         margin: 5px;
         padding: 10px;
         width: 50%;
+        flex-grow: 1;
       }
 
-      .misc-container {
-        width: 50vw;
-        height: 70vh;
-        background-color: #C4C4C4;
-        margin: 5px;
+      .analysis-title {
+        margin: 0px;
+      }
+
+      .analysis-sub-title {
+        margin: 15px 0px 0px 0px;
+      }
+
+      .analysis-sentence {
+        margin: 0px;
       }
       `}
     </style>

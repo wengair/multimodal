@@ -15,20 +15,27 @@ function SingleListBox({label, options, setOption}) {
     setValue(value)
     setOption(value)
   }
+
   return (
-    <>
+    <div className='option-container'>
       <p className='option-label'>{label}</p>
       <Listbox value={value} onChange={(value) => onOptionChange(value)}>
         {options ? options.map((option, idx) => <ListboxOption value={option[0]} key={idx}>{option[1]}</ListboxOption>) : ''}
       </Listbox>
       <style jsx='true'>
         {`
+        .option-container {
+          marign: 0px 5px;
+          display: flex;
+          align-items: center;
+        }
+
         .option-label {
-          margin: 10px 0px;
+          margin: 10px 10px 10px 0px;
         }
         `}
       </style>
-    </>
+    </div>
   )
 }
 

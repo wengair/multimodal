@@ -9,15 +9,12 @@ function DataContext({children}) {
   const readPredictionJson = () => {
     fetch('/data/200_sample_val_conv.json')
       .then(res => res.json())
-      .then(result => {
-        console.log(result)
-        setPredictions(result)
-      })
+      .then(result => setPredictions(result))
       .catch(e => console.log(e))
   }
 
   const findPredictionByClip = (clip) => {
-    console.log('clip', clip)
+    if(!predictions) return
     for(const prediction of predictions){
       const predictionClip = prediction.img_fn.split('/')[1].split('@')[0]
       if(predictionClip === clip) return prediction
@@ -34,7 +31,7 @@ function DataContext({children}) {
   }
 
   const findGroundTruthByClip = (clip) => {
-    console.log('clip', clip)
+    if(!groundTruths) return
     for(const groundTruth of groundTruths){
       const groundTruthClip = groundTruth.img_fn.split('/')[1].split('@')[0]
       if(groundTruthClip === clip) return groundTruth

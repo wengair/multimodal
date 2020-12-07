@@ -2,6 +2,45 @@
   --reach-accordion: 1;
 }
 
+[data-reach-accordion-item][data-state="open"] {
+  /* all panel */
+  /* background-color: red; */
+  outline: none;
+}
+
+[data-reach-accordion-button] {
+  cursor: pointer;
+  margin-top: -2px;
+  width:100%;
+  text-align: left;
+  font-size: 20px;
+  border: none;
+  border-radius: 0px;
+  border-bottom: 2px solid var(--c-strong-blue);
+  border-top: 2px solid var(--c-strong-blue);
+  background-color: white;
+  padding: 5px;
+  outline: none;
+}
+
+[data-reach-accordion-button][aria-expanded="true"] {
+  /* styles for buttons in open accordion items */
+  background-color: var(--c-strong-blue);
+  border: none;
+  color: white;
+}
+
 [data-reach-accordion-button][disabled] {
   cursor: not-allowed;
+}
+
+[data-reach-accordion-item][data-state="open"] {
+  /* styles for all open accordion items */
+  background-color: #e9e5e5;
+}
+
+[data-reach-accordion-panel][data-state="open"] {
+  /* styles for all open accordion panels */
+  outline: none;
+  padding: 5px 5px 15px 5px;
 }

@@ -15,9 +15,9 @@ function InstanceList({mode}) {
   useEffect(() => {
     if(data.predictions) setFilteredData(data.predictions)
   },[data])
+
   return (
     <div className='instance-list-container'>
-    {console.log(filteredData)}
       <Filter data={data} filteredData={filteredData} setFilteredData={setFilteredData} mode={mode} />
       <div className='cards-container'>
         {/* {filteredData && filteredData.map((instance, idx) => {

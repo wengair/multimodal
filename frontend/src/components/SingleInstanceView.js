@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext, useRef} from 'react'
 import EventAccordion from './EventAccordion'
 import {Link, useParams} from 'react-router-dom'
 import {Data} from './DataContext'
-import Boundingbox from 'react-bounding-box'
+import Boundingbox from './ReactBoundingBox'
 
 // func note: change according to event, only show number if can't
 function SingleInstanceView({mode}) {
@@ -44,7 +44,6 @@ function SingleInstanceView({mode}) {
     fetch(baseUrl + jsonPath)
       .then(res => res.json())
       .then(result => {
-        console.log(result)
         const tempAllBoxes = {}
         // const tempShowedBox = []
         const record = {}
@@ -93,14 +92,14 @@ function SingleInstanceView({mode}) {
   }
   
   return (
-    <div className='container'>
-      {console.log('groundTruth',groundTruth)}
+    <div className='single-content-container'>
+      <div className='nav'>
+        <div className='nav-item'><Link to={`/${mode}/instances`}>← Back</Link></div>
+        <div><p>Mode: {mode}</p></div>
+      </div>
       {showedBoxes && instance &&
-        <>
-        {console.log(instance)}
-        {console.log(showedBoxes)}
-          <div>
-            <Link to={`/${mode}/instances`}>Back</Link>
+        <div className='content-container'>
+          <div className='left-content'>
             <div className='image-container'>
               <img src={baseUrl + instance.img_fn} alt='place holder' className='instance-img' />
               <div className='canvas-container'>
@@ -112,35 +111,49 @@ function SingleInstanceView({mode}) {
               />
               </div>
             </div>
-            {allBoxes && Object.entries(allBoxes).map(objectData => {
-              return <button onClick={() => updateShowBoxes(objectData[1])}>{objectData[0]}</button>
-            })}
-            <div>
-              <button onClick={showAllBoxes}>Show all label</button>
-              <button onClick={hideAllBoxes}>Hide all label</button>
-              <button>Bounding box correspond to text</button>
-              <button>Show highlight in text</button>
+            <div className='img-btn-container'>
+              <button onClick={showAllBoxes} className='image-btn'>Show all label</button>
+              <button onClick={hideAllBoxes} className='image-btn'>Hide all label</button><br />
+              {/* <button>Bounding box correspond to text</button>
+              <button>Show highlight in text</button> */}
+              {allBoxes && Object.entries(allBoxes).map(objectData => {
+                return <button onClick={() => updateShowBoxes(objectData[1])} className='image-btn'>{objectData[0]}</button>
+              })}
             </div>
-            <div>
+            {/* <div>
               <button>Previous</button>
               <button>Next</button>
-            </div>
+            </div> */}
           </div>
-          <div>
-            <p>Mode: {mode}</p>
-            <div className='misc-container'>
-              <EventAccordion instance={instance} groundTruth={groundTruth} mode={mode}/>
-            </div>
+          <div className='right-content'>
+            <EventAccordion instance={instance} groundTruth={groundTruth} mode={mode}/>
           </div>
-        </>}
+        </div>}
       <style jsx='true'>
         {`
-        .container {
+        .single-content-container {
+          padding:0px 30px;
+        }
+        .nav {
+          display: flex;
+          height: 70px;
+          align-items: center;
+        }
+
+        .nav-item {
+          width: 51%;
+        }
+
+        .content-container {
           display: flex;
         }
 
+        .left-content{
+          width: 50%;
+        }
+
         .image-container {
-          width: 50vw;
+          width: 100%;
         }
 
         .instance-img {
@@ -149,15 +162,26 @@ function SingleInstanceView({mode}) {
 
         .canvas-container {
           position: absolute;
-          max-width: 50%;
-          top: 18px;
+          max-width: 47.73%;
+          top: 70px;
         }
-      
-        .misc-container {
-          width: 50vw;
-          height: 70vh;
-          background-color: #C4C4C4;
+
+        .img-btn-container {
+          margin: 0px -5px;
+        }
+
+        .image-btn {
           margin: 5px;
+          padding: 5px;
+          background: white;
+          border: 1px solid black;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+
+        .right-content {
+          width: 48%;
+          margin: 0px 10px;
         }
         `}
       </style>

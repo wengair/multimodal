@@ -74,14 +74,18 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("fill", function(d) {
                     return myColor(d.xGroup);
                 })
-                .on("mousedown", function(event, d) {
-                    tooltip.html("Object Number is:" + d.xGroup + "<br/>" + "Score:" + d.Bleu_1 + "<br/>" + "samples num:" + d.size)
+                .on("mouseover", function(event, d) {
+                    tooltip.html("Object Number: " + d.xGroup + "<br/>" + "Score: " + d.Bleu_1.toFixed(4) + "<br/>" + "Number of samples: " + d.size)
                         .style("left", (event.pageX) + "px")
                         .style("top", (event.pageY + 20) + "px")
-                        .style("opacity",1.0);   
+                        .style("opacity",1.0)
+                        .style("cursor", "default")
+                        .style("z-index", 1)
+                        .style("padding", "5px");
                 })
-                .on("mouseup", function(d, i) {
-                    tooltip.style("opacity",0.0);     
+                .on("mouseout", function(d, i) {
+                    tooltip.style("opacity",0)
+                        .style("z-index", -1);
                 });
         } else if (yaxisName === 'Cider') {
             let xScale = d3.scaleLinear()
@@ -141,14 +145,18 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("fill", function(d) {
                     return myColor(d.xGroup);
                 })
-                .on("mousedown", function(event, d) {
-                    tooltip.html("Object Number is:" + d.xGroup + "<br/>" + "Score:" + d.CIDEr + "<br/>" + "samples num:" + d.size)
+                .on("mouseover", function(event, d) {
+                    tooltip.html("Object Number: " + d.xGroup + "<br/>" + "Score: " + d.CIDEr.toFixed(4) + "<br/>" + "Number of samples: " + d.size)
                         .style("left", (event.pageX) + "px")
                         .style("top", (event.pageY + 20) + "px")
-                        .style("opacity",1.0);   
-                })
-                .on("mouseup", function(d, i) {
-                    tooltip.style("opacity",0.0);     
+                        .style("opacity",1.0)
+                        .style("cursor", "default")
+                        .style("z-index", 1)
+                        .style("padding", "5px");
+                    })
+                .on("mouseout", function(d, i) {
+                    tooltip.style("opacity",0.0)
+                        .style("z-index", -1);
                 });
         }
 
