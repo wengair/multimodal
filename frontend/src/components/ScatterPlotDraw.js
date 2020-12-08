@@ -1,22 +1,35 @@
 import React, {useEffect} from 'react'
 import * as d3 from 'd3'
-
+import { rgb } from 'd3'
 function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, selectedYaxis, selectedXaxis}) {
-    
-    useEffect(()=> {
-        console.log({filteredGroups})
-        d3.selectAll("svg > *").remove()    
+    let yaxisName = selectedYaxis
+    let xaxisName = selectedXaxis
+    useEffect(()=> {    
         const svg = d3.select("#plot")
         const plot_svg_width = 600
         const plot_svg_height = 500
         const padding = 40
         const margin = 20
-        //let selectedYaxis = 'Bleu_1'
-        let selectedXaxis = 'num of objects'
-        let yaxisName = selectedYaxis
-        let xaxisName = selectedXaxis
-        
+        let xScale_d = d3.scaleLinear()
+            .range([padding, plot_svg_width - padding * 2]);
+        let yScale_d = d3.scaleLinear()
+            .range([plot_svg_height - padding, padding]);
+        const axisB_d = d3.axisBottom()
+            .scale(xScale_d)
+            .ticks(1);      
+        const axisL_d = d3.axisLeft()
+            .scale(yScale_d)
+            .ticks(1);
+        svg.append("g")
+            .attr("class","line")
+            .attr("transform","translate(0, "+(plot_svg_height - padding)+")")
+            .call(axisB_d);
+        svg.append("g")
+            .attr("class","line")
+            .attr("transform","translate("+padding+",0)")
+            .call(axisL_d);
         if (yaxisName === 'Bleu_1') {
+            d3.selectAll("svg > *").remove();
             let xScale = d3.scaleLinear()
                 .domain([0, d3.max(filteredGroups, function(d) { return d.xGroup; })]) //filteredDate is a new data form the getScore function
                 .range([padding, plot_svg_width - padding * 2]);
@@ -30,9 +43,6 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .scale(xScale);
             const axisL = d3.axisLeft()
                 .scale(yScale);      
-            let myColor = d3.scaleOrdinal()
-                .domain([0, d3.max(filteredGroups, function(d) { return d.num_objects; })])
-                .range(["gold", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"]);
             svg.append("g")
                 .attr("transform","translate(0, "+(plot_svg_height - padding)+")")
                 .attr("class","axis")
@@ -53,7 +63,7 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .style("font-size", "12px")
-                .text('Bleu_1');
+                .text(yaxisName);
             const tooltip = d3.select("body")
                 .append("div")
                 .attr("class","tooltip")
@@ -71,23 +81,18 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("r",function(d) {
                     return rScale(d.size); //value of key "size" is the samples number in each group
                 })
-                .attr("fill", function(d) {
-                    return myColor(d.xGroup);
-                })
+                .attr("fill", rgb(0, 0, 200))
                 .on("mouseover", function(event, d) {
-                    tooltip.html("Object Number: " + d.xGroup + "<br/>" + "Score: " + d.Bleu_1.toFixed(4) + "<br/>" + "Number of samples: " + d.size)
+                    tooltip.html("Object Number is:" + d.xGroup + "<br/>" + "Score:" + d.Bleu_1 + "<br/>" + "samples num:" + d.size)
                         .style("left", (event.pageX) + "px")
                         .style("top", (event.pageY + 20) + "px")
-                        .style("opacity",1.0)
-                        .style("cursor", "default")
-                        .style("z-index", 1)
-                        .style("padding", "5px");
+                        .style("opacity",1.0);   
                 })
                 .on("mouseout", function(d, i) {
-                    tooltip.style("opacity",0)
-                        .style("z-index", -1);
+                    tooltip.style("opacity",0.0);     
                 });
         } else if (yaxisName === 'Cider') {
+            d3.selectAll("svg > *").remove();
             let xScale = d3.scaleLinear()
                 .domain([0, d3.max(filteredGroups, function(d) { return d.xGroup; })]) //filteredDate is a new data form the getScore function
                 .range([padding, plot_svg_width - padding * 2]);
@@ -101,9 +106,6 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .scale(xScale);
             const axisL = d3.axisLeft()
                 .scale(yScale);      
-            let myColor = d3.scaleOrdinal()
-                .domain([0, d3.max(filteredGroups, function(d) { return d.num_objects; })])
-                .range(["gold", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"]);
             svg.append("g")
                 .attr("transform","translate(0, "+(plot_svg_height - padding)+")")
                 .attr("class","axis")
@@ -124,7 +126,7 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .style("font-size", "12px")
-                .text('Cider');
+                .text(yaxisName);
             const tooltip = d3.select("body")
                 .append("div")
                 .attr("class","tooltip")
@@ -142,24 +144,17 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("r",function(d) {
                     return rScale(d.size); //value of key "size" is the samples number in each group
                 })
-                .attr("fill", function(d) {
-                    return myColor(d.xGroup);
-                })
+                .attr("fill", rgb(0, 0, 200))
                 .on("mouseover", function(event, d) {
-                    tooltip.html("Object Number: " + d.xGroup + "<br/>" + "Score: " + d.CIDEr.toFixed(4) + "<br/>" + "Number of samples: " + d.size)
+                    tooltip.html("Object Number is:" + d.xGroup + "<br/>" + "Score:" + d.CIDEr + "<br/>" + "samples num:" + d.size)
                         .style("left", (event.pageX) + "px")
                         .style("top", (event.pageY + 20) + "px")
-                        .style("opacity",1.0)
-                        .style("cursor", "default")
-                        .style("z-index", 1)
-                        .style("padding", "5px");
-                    })
+                        .style("opacity",1.0);   
+                })
                 .on("mouseout", function(d, i) {
-                    tooltip.style("opacity",0.0)
-                        .style("z-index", -1);
+                    tooltip.style("opacity",0.0);     
                 });
         }
-
     }, [filteredGroups, selectedYaxis, selectedXaxis])
 
     return (
