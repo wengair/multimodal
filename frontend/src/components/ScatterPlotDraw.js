@@ -71,9 +71,7 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("r",function(d) {
                     return rScale(d.size); //value of key "size" is the samples number in each group
                 })
-                .attr("fill", function(d) {
-                    return myColor(d.xGroup);
-                })
+                .attr("fill", "rgb(0, 0, 1")
                 .on("mouseover", function(event, d) {
                     tooltip.html("Object Number: " + d.xGroup + "<br/>" + "Score: " + d.Bleu_1.toFixed(4) + "<br/>" + "Number of samples: " + d.size)
                         .style("left", (event.pageX) + "px")
@@ -142,9 +140,7 @@ function ScatterPlotDraw({filteredGroups, selectedObjNumber, selectedObjName, se
                 .attr("r",function(d) {
                     return rScale(d.size); //value of key "size" is the samples number in each group
                 })
-                .attr("fill", function(d) {
-                    return myColor(d.xGroup);
-                })
+                .attr("fill", "rgb(0, 0, 1")
                 .on("mouseover", function(event, d) {
                     tooltip.html("Object Number: " + d.xGroup + "<br/>" + "Score: " + d.CIDEr.toFixed(4) + "<br/>" + "Number of samples: " + d.size)
                         .style("left", (event.pageX) + "px")

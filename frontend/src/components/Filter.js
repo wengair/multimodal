@@ -263,15 +263,15 @@ objectNameOptions.sort()
   return (
     <div>
       <div className='filter-container'>
-        <SingleListBox label='X Axis' options={[['true','-'],...xAxisOptions]} setOption={setSelectedXaxis}/>
-        <SingleListBox label='Y Axis' options={[['true','-'],...yAxisOptions]} setOption={setSelectedYaxis}/>
+        {mode === 'comparison' && <SingleListBox label='X Axis' options={[['true','-'],...xAxisOptions]} setOption={setSelectedXaxis}/>}
+        {mode === 'comparison' && <SingleListBox label='Y Axis' options={[['true','-'],...yAxisOptions]} setOption={setSelectedYaxis}/>}
         <SingleListBox label='Object Name' options= {[['true','-'],...objectNameOptions]} setOption={setSelectedObjName} />
         <SingleListBox label='Object Number' options= {[['true','-'],...objectNumberOptions]} setOption={setSelectedObjNumber} />
         <SingleListBox label='Action Type' options={[['true','-'],...actionTypeOptions]} setOption={setSelectedActionType} />
         {/* <SingleListBox label='Mark' options={markOptions} /> */}
         <button onClick={()=>window.location.reload()} className='reset-btn'>Reset</button>
       </div>
-      <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>
+      {mode === 'comparison' && <ScatterPlot data={data} selectedObjNumber={selectedObjNumber} selectedObjName={selectedObjName} selectedYaxis={selectedYaxis} selectedXaxis={selectedXaxis}/>}
       <div className='content-container'>
         <div className='card-area'>
           <div className='cardss-container'>
